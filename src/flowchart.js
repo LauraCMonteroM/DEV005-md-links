@@ -16,11 +16,25 @@ const validPath = (path) => {
 // ¿la ruta es absoluta?
 const toAbsolutePath = (userRoute) => {
           if(path.isAbsolute(userRoute)){
-                    console.log('Esta es la ruta absoluta ' + userRoute)
+                    return userRoute
           } else {
-                    console.log('convertida a absoluta es:' + path.resolve(userRoute));
+                    return path.resolve(userRoute)
           }
 }
 
+const isAdirectory = (path) =>{
+  return new Promise((resolve, reject) =>{
+    fs.stat(path, (err, stats) => {
+      if( !err ){
+           if(stats.isFile()){
+              resolve(false)
+               console.log('is file ? ' + stats.isFile());
+           }  else if(stats.isDirectory()){
+              resolve(true)
+               console.log('is directory? ' + stats.isDirectory());
+           }
+       }}) 
+  }) 
+}
 
-        module.exports = { validPath , toAbsolutePath }
+        module.exports = { validPath, toAbsolutePath,  isAdirectory}

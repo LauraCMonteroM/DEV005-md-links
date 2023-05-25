@@ -1,40 +1,29 @@
 const fs = require('fs');
-const { validPath , toAbsolutePath } = require('./flowchart.js')
+const path = require ('path')
+const { validPath , toAbsolutePath, isAdirectory} = require('./flowchart.js')
 
-const mdLinks = (path, options) => {
+const mdLinks = (userPath, options) => {
   return new Promise((resolve, reject) =>{
-    if (validPath(path)){
-      const absolutePath = toAbsolutePath(path);
+    if (validPath(userPath)){
+      const absolutePath = toAbsolutePath(userPath);
+      isAdirectory(absolutePath).then((isAdirectory)=>{
+        if(isAdirectory){
+          // recorrerlo
+        } else if(path.extname(absolutePath) === '.md') /* si es .md guardarlo en un array*/ {
+          let mdFiles = [];
+          mdFiles.push(absolutePath);
+          console.log(mdFiles.length)
+        } else {
+          
+        }
+      })
       resolve(absolutePath);
     } else {
       reject ('Error')
     }
-  
-// es archivo .md o directorio?
-fs.stat(path, (err, stats) => {
-  if( !err ){
-       if(stats.isFile()){
-           console.log('is file ? ' + stats.isFile());
-       }  else if(stats.isDirectory()){
-           console.log('is directory? ' + stats.isDirectory());
-       }
-   }   
-  });
 })};
 
-  
-
-   //   mdLinks(path)
-  //   .then((res) => {
-  //   console.log(`La ruta: ${res} es válida`)
-  // })
-  // .catch((error) =>{
-  //   console.log(error);
-  // })
-
-
-
-mdLinks('./Prueba1')
+mdLinks('C:/Users/Laura Montero/Desktop/MdLinks/DEV005-md-links/src/Prueba1/archivosvarios.md/nolinks.md')
 
 module.exports = {
   mdLinks,

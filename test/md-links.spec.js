@@ -1,9 +1,14 @@
-const mdLinks = require('../index.js')
+const mdLinks = require("../src/index.js");
+const { validPath } = require("../src/flowchart.js");
 
-describe('mdLinks', () => {
+describe("validPath", () => {
+  test("debería devolver true si la ruta existe", () => {
+    
+    const path = "/ruta/valida/";
 
-  it('should...', () => {
-    console.log('FIX ME!');
+    const result = validPath(path);
+
+    expect(fs.existsSync).toHaveBeenCalledWith(path);
+    expect(result).toBe(true);
   });
-
 });
