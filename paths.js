@@ -2,10 +2,33 @@
 const fs = require('fs');
 const path = require('path');
 
+const arrayMdFiles = [];
+
 const paths = (userPath) => {
-  if (fs.existsSync(userPath) === true && fs.statSync(userPath).isFile() === true && path.extname(userPath) === '.md') {
-    console.log('si existe');
+  if (
+    fs.existsSync(userPath) === true
+    && fs.statSync(userPath).isFile() === true
+    && path.extname(userPath) === '.md'
+  ) {
+    arrayMdFiles.push(path.resolve(userPath));
+    return arrayMdFiles;
+  } if (
+    fs.existsSync(userPath) === true
+    && fs.statSync(userPath).isDirectory() === true
+  ) {
+    const filesInside = fs.readdirSync(userPath);
+    filesInside.forEach((file) => {
+      const pathPlusFileInside = path.join(userPath, file);
+      paths(path.resolve(pathPlusFileInside));
+      return arrayMdFiles;
+    });
+  } else {
+    return undefined;
   }
 };
 
-paths('./src/Prueba1/archivosvarios.md/doslinks.md');
+paths('./src/Prueba1');
+
+module.exports = {
+  paths,
+};
