@@ -1,14 +1,22 @@
-const mdLinks = require("../src/index.js");
-const { validPath } = require("../src/flowchart.js");
+const fs = require('fs');
+const path = require ('path');
 
-describe("validPath", () => {
-  test("debería devolver true si la ruta existe", () => {
-    
-    const path = "/ruta/valida/";
+let arrayMdFiles = [];
 
-    const result = validPath(path);
+const paths = require('./paths');
 
-    expect(fs.existsSync).toHaveBeenCalledWith(path);
-    expect(result).toBe(true);
+describe ('paths function', () =>{
+  beforeEach (() => {
+    arrayMdFiles = [];
   });
-});
+  it('should return an array with the resolved path if the userPath is a valid .md file', () => {
+    const userPath = '';
+    const resolvedPath = path.resolve(userPath);
+
+    const result = paths(userPath);
+
+    expect(result).toEqual([resolvedPath]);
+    expect(arrayMdFiles).toEqual([resolvedPath]);
+  });
+  
+})
