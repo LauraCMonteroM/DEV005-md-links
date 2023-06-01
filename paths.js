@@ -12,7 +12,8 @@ const paths = (userPath) => {
   ) {
     arrayMdFiles.push(path.resolve(userPath));
     return arrayMdFiles;
-  } if (
+  }
+  if (
     fs.existsSync(userPath) === true
     && fs.statSync(userPath).isDirectory() === true
   ) {
@@ -20,14 +21,11 @@ const paths = (userPath) => {
     filesInside.forEach((file) => {
       const pathPlusFileInside = path.join(userPath, file);
       paths(path.resolve(pathPlusFileInside));
-      return arrayMdFiles;
     });
-  } else {
-    return undefined;
+    return arrayMdFiles;
   }
+  return undefined;
 };
-
-paths('./src/Prueba1');
 
 module.exports = {
   paths,

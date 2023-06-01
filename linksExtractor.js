@@ -1,15 +1,37 @@
 const fs = require('fs');
+const path = require('path');
+
 const { paths } = require('./paths'); // borrar en un futuro
 
+const extractedLinks = [];
+
 const extractLinks = (userPath) => {
-  const buffer = fs.readFileSync('./src/Prueba1/archivosvariosmarkdown/doslinks.md');
-  
-  console.log(buffer);
+fs.readFile(userPath, 'utf-8', (err, data) => {
+    if (err) {
+      return undefined;
+    }
+    const regExpLinks = /\[(.*?)\]\((.*?)\)/g;
+    const links = [];
+
+    let coincidence;
+    while ((coincidence = regExpLinks.exec(data)) !== null) {
+      const textLink = coincidence[1];
+      const url = coincidence[2];
+
+      links.push({ texto: textLink, url: url });
+    }
+    links.forEach((link, i) => {
+      console.log(` ${i + 1}:`);
+      console.log(path.resolve(userPath));
+      console.log('TEXT: ', link.texto);
+      console.log('URL: ', link.url);
+    });
+  });
 };
 
-// console.log(extractLinks(paths('./src/Prueba1')[0]));
+extractLinks(paths('./src/Prueba1')[0]);
 
-// extractLinks puede (opcional) ser una promesa y se cosume asi  extractLinks(paths('README.md')[0]).then(res=>console.log(res)).catch(err=>console.log(err))
+
 
 module.exports = {
   extractLinks,
