@@ -1,14 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-const { paths } = require('./paths'); // borrar en un futuro
-
-const extractedLinks = [];
-
-const extractLinks = (userPath) => {
-fs.readFile(userPath, 'utf-8', (err, data) => {
+const extractLinks = (userPath) => new Promise((resolve, reject) => {
+  fs.readFile(userPath, 'utf-8', (err, data) => {
     if (err) {
-      return undefined;
+      reject(err);
+      return;
     }
     const regExpLinks = /\[(.*?)\]\((.*?)\)/g;
     const links = [];
@@ -16,22 +13,30 @@ fs.readFile(userPath, 'utf-8', (err, data) => {
     let coincidence;
     while ((coincidence = regExpLinks.exec(data)) !== null) {
       const textLink = coincidence[1];
-      const url = coincidence[2];
+      const urlLink = coincidence[2];
 
-      links.push({ texto: textLink, url: url });
+      const infolink = {
+        index: links.length + 1,
+        resolvedPath: path.resolve(userPath),
+        texto: textLink,
+        url: urlLink,
+      };
+      links.push(infolink);
+      console.log(links);
     }
-    links.forEach((link, i) => {
-      console.log(` ${i + 1}:`);
-      console.log(path.resolve(userPath));
-      console.log('TEXT: ', link.texto);
-      console.log('URL: ', link.url);
-    });
+
+    resolve(links);
   });
-};
+});
 
-extractLinks(paths('./src/Prueba1')[0]);
-
-
+const userPath = './src/Prueba1'; // ruta de ejemplo
+extractLinks(userPath)
+  .then((links) => {
+    console.log(links); // Hacer algo con los links encontrados
+  })
+  .catch((error) => {
+    console.error(error);
+  });
 
 module.exports = {
   extractLinks,
