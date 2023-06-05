@@ -2,9 +2,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const arrayMdFiles = [];
-
 const paths = (userPath) => {
+  const arrayMdFiles = [];
   if (
     fs.existsSync(userPath) === true
     && fs.statSync(userPath).isFile() === true
@@ -12,15 +11,15 @@ const paths = (userPath) => {
   ) {
     arrayMdFiles.push(path.resolve(userPath));
     return arrayMdFiles;
-  }
-  if (
+  } if (
     fs.existsSync(userPath) === true
     && fs.statSync(userPath).isDirectory() === true
   ) {
     const filesInside = fs.readdirSync(userPath);
     filesInside.forEach((file) => {
       const pathPlusFileInside = path.join(userPath, file);
-      paths(path.resolve(pathPlusFileInside));
+      const newFiles = paths(path.resolve(pathPlusFileInside));
+      arrayMdFiles.push(newFiles);
     });
     return arrayMdFiles;
   }
