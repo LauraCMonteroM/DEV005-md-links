@@ -3,10 +3,8 @@ const path = require('path');
 
 const { paths } = require('./paths'); // borrar en un futuro
 
-const extractedLinks = [];
-
 const extractLinks = (userPath) => {
-fs.readFile(userPath, 'utf-8', (err, data) => {
+  fs.readFile(userPath, 'utf-8', (err, data) => {
     if (err) {
       return undefined;
     }
@@ -18,20 +16,17 @@ fs.readFile(userPath, 'utf-8', (err, data) => {
       const textLink = coincidence[1];
       const url = coincidence[2];
 
-      links.push({ texto: textLink, url: url });
+      links.push({ texto: textLink, url });
     }
-    links.forEach((link, i) => {
-      console.log(` ${i + 1}:`);
-      console.log(path.resolve(userPath));
-      console.log('TEXT: ', link.texto);
-      console.log('URL: ', link.url);
-    });
+    const completeLinks = links.map((link) => ({
+      ...link,
+      file: path.resolve(userPath),
+    }));
+    console.log(completeLinks);
   });
 };
 
-extractLinks(paths('./src/Prueba1')[0]);
-
-
+// extractLinks(paths('README.md')[1]);
 
 module.exports = {
   extractLinks,
