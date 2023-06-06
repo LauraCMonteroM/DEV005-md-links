@@ -2,28 +2,31 @@
 const fs = require('fs');
 const path = require('path');
 
-const paths = (userPath, arrayMdFiles = []) => {
-  if (
-    fs.existsSync(userPath) === true
-    && fs.statSync(userPath).isFile() === true
-    && path.extname(userPath) === '.md'
-  ) {
-    arrayMdFiles.push(path.resolve(userPath));
-    return arrayMdFiles;
-  } if (
-    fs.existsSync(userPath) === true
-    && fs.statSync(userPath).isDirectory() === true
-  ) {
-    const filesInside = fs.readdirSync(userPath);
-    filesInside.forEach((file) => {
-      const pathPlusFileInside = path.join(userPath, file);
-      paths(path.resolve(pathPlusFileInside), arrayMdFiles);
-    });
-    return arrayMdFiles;
+const findMdFiles = (userPath) => {
+  const arrayMdFiles = [];
+
+  const processPath = (filePath) => {
+    if (fs.statSync(filePath).isFile() && path.extname(filePath) === '.md') {
+      arrayMdFiles.push(path.resolve(filePath));
+    } else if (fs.statSync(filePath).isDirectory()) {
+      const filesInside = fs.readdirSync(filePath);
+      filesInside.forEach((file) => {
+        const pathPlusFileInside = path.join(filePath, file);
+        processPath(pathPlusFileInside);
+      });
+    }
+  };
+
+  if (fs.existsSync(userPath)) {
+    const absolutePath = path.resolve(userPath);
+    processPath(absolutePath);
+  } else {
+    console.log('El archivo o directorio no existe');
   }
-  return undefined;
+
+  return arrayMdFiles;
 };
 
 module.exports = {
-  paths,
+  findMdFiles,
 };
