@@ -42,7 +42,7 @@ describe('paths', () => {
   });
 
   test('debe devolver los archivos dentro de un directorio', () => {
-    const userPath = 'C:/Users/Laura Montero/Desktop/MdLinks/DEV005-md-links/src/Prueba1/carpetaparatest'; // Ruta de un directorio válido en tu sistema de archivos
+    const userPath = 'C:/Users/Laura Montero/Desktop/MdLinks/DEV005-md-links/src/Prueba1/carpetaparatest'; 
     const filesInsideMock = ['aquíhayunlink.md'];
 
     jest.spyOn(fs, 'readdirSync').mockReturnValue(filesInsideMock);
@@ -56,7 +56,7 @@ describe('paths', () => {
   });
 
   test('debe devolver un array con rutas resueltas', () => {
-    const userPath = 'C:/Users/Laura Montero/Desktop/MdLinks/DEV005-md-links/src/Prueba1/carpetaparatest/aquíhayunlink.md'; // Ruta de un archivo válido en tu sistema de archivos
+    const userPath = 'C:/Users/Laura Montero/Desktop/MdLinks/DEV005-md-links/src/Prueba1/carpetaparatest/aquíhayunlink.md';
     const arrayMdFilesMock = [path.resolve(userPath)];
 
     const result = paths(userPath);
