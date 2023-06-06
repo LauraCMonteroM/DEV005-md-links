@@ -1,13 +1,11 @@
+/* eslint-disable linebreak-style */
 const fs = require('fs');
 const path = require('path');
 
-const { paths } = require('./paths'); // borrar en un futuro
-
 const extractLinks = (userPath) => {
-  fs.readFile(userPath, 'utf-8', (err, data) => {
-    if (err) {
-      return undefined;
-    }
+  try {
+    const data = fs.readFileSync(userPath, 'utf-8');
+
     const regExpLinks = /\[(.*?)\]\((.*?)\)/g;
     const links = [];
 
@@ -18,15 +16,16 @@ const extractLinks = (userPath) => {
 
       links.push({ texto: textLink, url });
     }
+
     const completeLinks = links.map((link) => ({
       ...link,
-      file: path.resolve(userPath),
+      file: path.resolve(userPath).replace(/\\/g, '/'),
     }));
-    console.log(completeLinks);
-  });
+    return completeLinks;
+  } catch (err) {
+    return undefined;
+  }
 };
-
-extractLinks(paths('README.md')[1]);
 
 module.exports = {
   extractLinks,
