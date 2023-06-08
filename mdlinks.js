@@ -1,26 +1,24 @@
+const fs = require('fs');
+const path = require('path');
 const { extractLinks } = require('./linksExtractor');
 const { findMdFiles } = require('./paths');
+const { validateLinks, statsLinks, brokenLinks } = require('./validatestats');
 
-const mdLinks = (path) => new Promise((resolve, reject) => {
-  const files = findMdFiles(path);
-  const promises = files.map((route) => extractLinks(route));
-
-  Promise.all(promises)
-    .then((results) => {
-      const allLinks = results.flat();
-      resolve(allLinks);
-    })
-    .catch((error) => {
-      reject(error);
-    });
+const mdLinks = (userPath, options) => new Promise((resolve, reject) => {
+  const files = findMdFiles(userPath);
+  const objLinks = files.map((route) => extractLinks(route)).flat();
+  if (!fs.statSync(userPath)) {
+    reject(new Error('Error, la ruta no existe'));
+  }
+  if (options.validate && options.stats) {
+    resolve(brokenLinks(objLinks));
+  } else if (options.stats && !options.validate) {
+    resolve(statsLinks(objLinks));
+  } else if (options.validate && !options.stats) {
+    resolve(validateLinks(objLinks));
+  } else {
+    resolve(objLinks);
+  }
 });
-
-mdLinks('./src/Prueba1/jajajajaja')
-  .then((links) => {
-    console.log('nosotros somos los links :', links);
-  })
-  .catch((error) => {
-    console.error('es un error encontrar links en un archivo inexistente', error);
-  });
 
 module.exports = mdLinks;
