@@ -25,6 +25,6 @@ describe('findMdFiles', () => {
 
     const resultado = findMdFiles(nonexistentPath);
 
-    expect(resultado).toEqual([]);
+    expect(resultado).toEqual('El archivo o directorio no existe');
   });
 });
