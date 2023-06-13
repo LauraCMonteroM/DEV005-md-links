@@ -21,7 +21,7 @@ const findMdFiles = (userPath) => {
     const absolutePath = path.resolve(userPath);
     processPath(absolutePath);
   } else {
-    console.log('El archivo o directorio no existe');
+    return 'El archivo o directorio no existe';
   }
 
   return arrayMdFiles;
